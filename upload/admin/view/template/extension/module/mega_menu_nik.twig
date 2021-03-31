@@ -1,0 +1,289 @@
+{{ header }}
+<style>
+  .add-category-form-container {
+    width: 100%;
+    border: 1px solid #e3e3e3;
+    display: flex;
+    padding: 10px;
+    flex-direction: column;
+  }
+  .add-category-form-row {
+    width: 100%;
+    margin: 5px 0;
+  }
+  .add-category-form-add-modules {
+    border: 1px solid #e3e3e3;
+    padding: 10px;
+  }
+  .add-category-button-container {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+  .add-category-form-module-item {
+    display: flex;
+    padding: 5px;
+    justify-content: space-between;
+    border: 1px solid #dadada;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  .add-category-form-module-item-name {
+    padding: 0 10px;
+  }
+  .add-module-modal-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 25px;
+  }
+  .add-module-item {
+    padding: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .add-module-item span {
+    margin-right: 5px;
+  }
+
+  .category-form-list-modules-item {
+    border: 1px solid #dadada;
+    padding: 5px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  .category-form-list-modules-item:first-child {
+    margin-top: 0;
+  }
+</style>
+{{ column_left }}
+<div id="content">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="form-module" data-toggle="tooltip" title="{{ button_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ button_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a></div>
+      <h1>{{ heading_title }}</h1>
+      <ul class="breadcrumb">
+        {% for breadcrumb in breadcrumbs %}
+        <li><a href="{{ breadcrumb.href }}">{{ breadcrumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="container-fluid">
+    {% if error_warning %}
+    <div class="alert alert-danger alert-dismissible"><i class="fa fa-exclamation-circle"></i> {{ error_warning }}
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+    </div>
+    {% endif %}
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ text_edit }}</h3>
+      </div>
+      <div class="panel-body">
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="form-module" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-class-button-for-call">{{ entry_class_button_for_call }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_mega_menu_nik_class_button_for_call" value="{{ module_mega_menu_nik_class_button_for_call }}" placeholder="{{ entry_class_button_for_call }}" id="input-class-button-for-call" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-call-type">{{ entry_call_type }}</label>
+            <div class="col-sm-10">
+              <select name="module_mega_menu_nik_call_type" id="input-call-type" class="form-control">
+                {% if module_mega_menu_nik_call_type %}
+                  <option value="1" selected="selected">{{ text_on_click }}</option>
+                  <option value="0">{{ text_on_hover }}</option>
+                {% else %}
+                  <option value="1">{{ text_on_click }}</option>
+                  <option value="0" selected="selected">{{ text_on_hover }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-width">{{ entry_window_width }}</label>
+            <div class="col-sm-5">
+              <input type="text" name="module_mega_menu_nik_width" value="{{ module_mega_menu_nik_width }}" placeholder="{{ entry_window_width }}" id="input-width" class="form-control" />
+            </div>
+            <div class="col-sm-5">
+              <select name="module_mega_menu_nik_width_type" id="input-width-type" class="form-control">
+                {% if module_mega_menu_nik_call_type %}
+                  <option value="1" selected="selected">{{ text_pixel }}</option>
+                  <option value="0">{{ text_percent }}</option>
+                {% else %}
+                  <option value="1">{{ text_pixel }}</option>
+                  <option value="0" selected="selected">{{ text_percent }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-link-to-all-categories-page">{{ entry_link_to_all_categories_page }}</label>
+            <div class="col-sm-10">
+              <input type="text" name="module_mega_menu_nik_link_to_all_categories" value="{{ module_mega_menu_nik_link_to_all_categories }}" placeholder="{{ entry_link_to_all_categories_page }}" id="input-link-to-all-categories-page" class="form-control" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-status">{{ entry_status }}</label>
+            <div class="col-sm-10">
+              <select name="module_mega_menu_nik_status" id="input-status" class="form-control">
+                {% if module_mega_menu_nik_status %}
+                <option value="1" selected="selected">{{ text_enabled }}</option>
+                <option value="0">{{ text_disabled }}</option>
+                {% else %}
+                <option value="1">{{ text_enabled }}</option>
+                <option value="0" selected="selected">{{ text_disabled }}</option>
+                {% endif %}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="col-sm-2 control-label" for="input-module-categories">{{ entry_module_categories }}</label>
+            <div class="col-sm-10">
+
+              <div class="category-form-list-modules">
+                {% for category in added_categories %}
+
+                  <div class="category-form-list-modules-item">
+                    <span>{{ category.category_name }}</span>
+                    <div class="category-form-list-modules-item-buttons">
+                      <button type="button" class="btn btn-primary"><i class="fa fa-minus-circle"></i></button>
+                      <button type="button" class="btn btn-danger"><i class="fa fa-pencil"></i></button>
+                    </div>
+                  </div>
+
+                {% endfor %}
+
+              </div>
+
+              <div class="add-category-form-container" style="display: none">
+                <div class="add-category-form-row">
+                  <label class="col-sm-2 control-label" for="input-categories">{{ entry_categories }}</label>
+                  <div class="col-sm-10">
+                    <select name="category" id="input-categories" disabled="disabled" class="form-control">
+                      {% for category in categories %}
+                        <option value="{{ category.category_id }}">{{ category.name }}</option>
+                      {% endfor %}
+                    </select>
+                  </div>
+                </div>
+
+                <div class="add-category-form-row">
+                  <label class="col-sm-2 control-label" for="input-modules">{{ entry_add_modules }}</label>
+                  <div class="col-sm-10">
+
+                    <div class="add-category-form-add-modules">
+                      <div class="add-category-form-add-modules-inner">
+
+                      </div>
+                      <div class="add-category-button-container">
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target=".bd-example-modal-sm"><i class="fa fa-plus-circle"></i></button>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <div class="add-category-button-container">
+                  <button type="submit" class="btn btn-success">{{ button_save }}</button>
+                  <button type="button" class="btn btn-primary add-category-form-hide-btn" style="margin-left: 10px;">{{ button_close }}</button>
+                </div>
+
+              </div>
+
+              <div class="add-category-button-container">
+                <button type="button" class="btn btn-primary add-category-form-show-btn">{{ button_add_category }}</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h5 class="modal-title" id="exampleModalLabel">{{ text_modules }}</h5>
+      </div>
+      <div class="modal-body">
+        <div class="add-module-modal-container">
+          {% if extensions %}
+            {% for extension in extensions %}
+
+              <div class="add-module-item">
+                <span>{{ extension.name }}</span>
+                {% if not extension.module %}
+                  <button class="btn btn-primary add-module-btn" data-module-code="{{ extension.code }}" data-module-name="{{ extension.name }}"><i class="fa fa-plus"></i></button>
+                {% endif %}
+              </div>
+
+              {% for module in extension.module %}
+
+                <div class="add-module-item">
+                  <span style="margin-left: 30px;">{{ module.name }}</span>
+                  <button class="btn btn-primary add-module-btn" data-module-code="{{ module.code }}" data-module-name="{{ extension.name }}"><i class="fa fa-plus"></i></button>
+                </div>
+
+              {% endfor %}
+
+            {% endfor %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $('#form-module').delegate('.add-category-form-show-btn', 'click', function () {
+    $('.add-category-form-container').show()
+    $('#input-categories').removeAttr('disabled')
+    $('input[name="modules[]"]').attr('disabled', 'disabled')
+  })
+
+  $('#form-module').delegate('.add-category-form-hide-btn', 'click', function () {
+    $('.add-category-form-container').hide()
+    $('#input-categories').attr('disabled', 'disabled')
+    $('input[name="modules[]"]').attr('disabled', 'disabled')
+  })
+
+  $('.bd-example-modal-sm').delegate('.add-module-btn', 'click', function () {
+    let moduleCode = $(this).attr('data-module-code')
+    let moduleName = $(this).attr('data-module-name')
+
+    $('.add-category-form-add-modules-inner').append(addModuleHTML(moduleCode, moduleName));
+  })
+
+  function addModuleHTML(moduleCode, moduleName) {
+    let html = '';
+
+    html =  '<div class="add-category-form-module-item">\n' +
+              '<div class="add-category-form-module-item-name">\n' +
+                moduleName +
+              '</div>\n' +
+              '<input type="hidden" name="modules[]" value="' + moduleCode + '">\n' +
+              '<button type="button" class="btn btn-danger add-category-form-module-remove-btn"><i class="fa fa-minus-circle"></i></button>\n' +
+            '</div>'
+
+    return html;
+  }
+
+  $('#form-module').delegate('.add-category-form-module-remove-btn', 'click', function () {
+    $(this).parent().remove()
+  })
+</script>
+{{ footer }}
