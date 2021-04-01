@@ -12,14 +12,30 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
         $this->load->model('catalog/category');
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validate()) {
+		    $setting = $this->model_setting_setting->getSetting('module_mega_menu_nik');
 		    $post = $this->request->post;
-		    if (isset($post['category'])) {
-                $post['module_mega_menu_nik_categories'] = array();
 
-                $post['module_mega_menu_nik_categories'][]  = array(
-                    'category' => isset($post['category']) ? $post['category'] : '',
-                    'modules'  => isset($post['modules']) ? $post['modules'] : array()
-                );
+            $post['module_mega_menu_nik_categories'] = isset($setting['module_mega_menu_nik_categories']) ? $setting['module_mega_menu_nik_categories'] : array();
+
+            if (isset($post['category'])) {
+                if (isset($post['category_item_id'])) {
+                    foreach ( $post['module_mega_menu_nik_categories'] as $k => $category) {
+                        if ($category['id'] == $post['category_item_id']) {
+                            $category['category'] = $post['category'];
+                            $category['modules']  = $post['modules'];
+
+                            $post['module_mega_menu_nik_categories'][$k] = $category;
+                        }
+                    }
+                } else {
+                    $id = !empty($post['module_mega_menu_nik_categories']) ? ((int)$post['module_mega_menu_nik_categories'][count($post['module_mega_menu_nik_categories']) - 1]['id'] + 1) : 0;
+
+                    $post['module_mega_menu_nik_categories'][] = array(
+                        'id'       => $id,
+                        'category' => isset($post['category']) ? $post['category'] : '',
+                        'modules'  => isset($post['modules']) ? $post['modules'] : array()
+                    );
+                }
             }
 
 			$this->model_setting_setting->editSetting('module_mega_menu_nik', $post);
@@ -55,6 +71,8 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
 		$data['action'] = $this->url->link('extension/module/mega_menu_nik', 'user_token=' . $this->session->data['user_token'], true);
 
 		$data['cancel'] = $this->url->link('marketplace/extension', 'user_token=' . $this->session->data['user_token'] . '&type=module', true);
+
+        $data['user_token'] = $this->session->data['user_token'];
 
         if (isset($this->request->post['module_mega_menu_nik_class_button_for_call'])) {
             $data['module_mega_menu_nik_class_button_for_call'] = $this->request->post['module_mega_menu_nik_class_button_for_call'];
@@ -97,6 +115,7 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
             foreach ($data['module_mega_menu_nik_categories'] as $category) {
                 $category_name = $this->model_extension_module_mega_menu_nik->getCategoryName($category['category']);
                 $data['added_categories'][] = array(
+                    'id'            => $category['id'],
                     'category_id'   => $category['category'],
                     'category_name' => $category_name['name'],
                     'modules'       => $category['modules']
@@ -110,8 +129,6 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
 		} else {
 			$data['module_mega_menu_nik_status'] = $this->config->get('module_mega_menu_nik_status');
 		}
-
-
 
 		$main_categories = $this->model_extension_module_mega_menu_nik->getMainCategories();
 
@@ -156,6 +173,58 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
 
 		$this->response->setOutput($this->load->view('extension/module/mega_menu_nik', $data));
 	}
+
+	public function removeCategoryItem() {
+	    if (isset($this->request->get['categoryItemId']) && $this->request->server['REQUEST_METHOD'] == 'POST') {
+            $this->load->model('setting/setting');
+            $setting = $this->model_setting_setting->getSetting('module_mega_menu_nik');
+            if (isset($setting['module_mega_menu_nik_categories']) && !empty($setting['module_mega_menu_nik_categories'])) {
+
+                foreach ($setting['module_mega_menu_nik_categories'] as $k => $category_info) {
+                    if ($category_info['id'] == $this->request->get['categoryItemId']) {
+                        unset($setting['module_mega_menu_nik_categories'][$k]);
+                    }
+                }
+
+                $setting['module_mega_menu_nik_categories'] = array_values($setting['module_mega_menu_nik_categories']);
+
+                $this->model_setting_setting->editSetting('module_mega_menu_nik', $setting);
+            }
+        }
+    }
+
+    public function getCategoryItem() {
+        if (isset($this->request->get['categoryItemId']) && $this->request->server['REQUEST_METHOD'] == 'POST') {
+            $this->load->model('setting/setting');
+            $setting = $this->model_setting_setting->getSetting('module_mega_menu_nik');
+            if (isset($setting['module_mega_menu_nik_categories']) && !empty($setting['module_mega_menu_nik_categories'])) {
+                foreach ($setting['module_mega_menu_nik_categories'] as $category_info) {
+                    if ($category_info['id'] == $this->request->get['categoryItemId']) {
+
+                        $category_item_info = array(
+                            'id' => $category_info['id'],
+                            'category_id' => $category_info['category'],
+                        );
+
+                        foreach ($category_info['modules'] as $module) {
+                            $part = explode('.', $module);
+                            $this->load->language('extension/module/' . $part[0], 'extension');
+                            $category_item_info['modules'][] = array(
+                                'module_name' => strip_tags($this->language->get('extension')->get('heading_title')),
+                                'module_code' => $module,
+                            );
+
+                        }
+
+                        $this->response->addHeader('Content-Type: application/json');
+                        $this->response->setOutput(json_encode($category_item_info));
+                        break;
+                    }
+                }
+
+            }
+        }
+    }
 
 	protected function validate() {
 		if (!$this->user->hasPermission('modify', 'extension/module/mega_menu_nik')) {

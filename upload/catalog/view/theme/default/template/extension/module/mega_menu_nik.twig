@@ -1,0 +1,99 @@
+<style>
+  .mega-menu {
+    background-color: #fff;
+    width: fit-content;
+    height: 600px;
+    z-index: 999;
+    position: fixed;
+    top: 10%;
+    left: 10%;
+    box-shadow: 0px 8px 8px 0px rgba(34, 60, 80, 0.2);
+    border-radius: 5px;
+    display: flex;
+    border: 1px solid #C8D7DE;
+  }
+  .mega-menu-inner {
+    padding: 10px 0 25px;
+    width: 250px;
+    border-right: 1px solid #C8D7DE;
+  }
+  .mega-menu .border-right-none {
+    border-right: none;
+  }
+  .mega-menu-inner-item, .mega-menu-inner-item-all {
+    padding: 15px 25px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    font-size: 14px;
+    color: black;
+  }
+  .mega-menu-inner-divider {
+    border-top: 1px solid #C8D7DE;
+    width: 84%;
+    margin: 0 auto;
+  }
+  .mega-menu-inner-item:hover, .mega-menu-inner-item-all:hover {
+    background-color: #F8F4F3;
+    color: black;
+  }
+  .mega-menu-inner-item-name {
+    color: black;
+  }
+  .mega-menu-inner-item:hover .mega-menu-inner-item-name {
+    color: black;
+  }
+  .mega-menu-inner-item:hover .mega-menu-childs-container {
+    display: flex;
+  }
+  .mega-menu-inner-item:hover .mega-menu {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px
+  }
+  .mega-menu-childs-container {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: -1px;
+    background-color: #fff;
+    width: 500px;
+    height: 600px;
+    box-shadow: 0px 8px 8px 0px rgba(34, 60, 80, 0.2);
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border: 1px solid #C8D7DE;
+  }
+  .mega-menu-childs-container .mega-menu-inner {
+    display: flex;
+    flex-direction: column;
+  }
+</style>
+
+<div class="mega-menu">
+  <div class="mega-menu-inner">
+    {% for category in module_mega_menu_nik_categories %}
+      <a href="{{ module_mega_menu_nik_link_to_all_categories }}" class="mega-menu-inner-item">
+        <span class="mega-menu-inner-item-name">{{ category.category.name }}</span>
+        <span class="mega-menu-inner-item-arrow">></span>
+        <div class="mega-menu-childs-container">
+          {% for keys, secondLvlChild in category.category.childs %}
+            <div class="mega-menu-inner">
+            {{ secondLvlChild.name }}
+            </div>
+          {% endfor %}
+        </div>
+      </a>
+    {% endfor %}
+    {% if module_mega_menu_nik_link_to_all_categories %}
+      <div class="mega-menu-inner-divider"></div>
+      <a href="{{ module_mega_menu_nik_link_to_all_categories }}" class="mega-menu-inner-item-all">
+        <span class="mega-menu-inner-item-name">{{ text_all_categories }}</span>
+      </a>
+    {% endif %}
+  </div>
+</div>

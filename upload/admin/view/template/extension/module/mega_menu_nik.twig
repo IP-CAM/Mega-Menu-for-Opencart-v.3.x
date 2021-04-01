@@ -6,6 +6,7 @@
     display: flex;
     padding: 10px;
     flex-direction: column;
+    margin-top: 10px;
   }
   .add-category-form-row {
     width: 100%;
@@ -155,13 +156,12 @@
                   <div class="category-form-list-modules-item">
                     <span>{{ category.category_name }}</span>
                     <div class="category-form-list-modules-item-buttons">
-                      <button type="button" class="btn btn-primary"><i class="fa fa-minus-circle"></i></button>
-                      <button type="button" class="btn btn-danger"><i class="fa fa-pencil"></i></button>
+                      <button type="button" data-category-item-id="{{ category.id }}" class="btn btn-primary category-item-edit-btn"><i class="fa fa-pencil"></i></button>
+                      <button type="button" data-category-item-id="{{ category.id }}" class="btn btn-danger category-item-remove-btn"><i class="fa fa-minus-circle"></i></button>
                     </div>
                   </div>
 
                 {% endfor %}
-
               </div>
 
               <div class="add-category-form-container" style="display: none">
@@ -173,6 +173,7 @@
                         <option value="{{ category.category_id }}">{{ category.name }}</option>
                       {% endfor %}
                     </select>
+                    <input type="hidden" name="category_item_id" value="">
                   </div>
                 </div>
 
@@ -249,16 +250,22 @@
 </div>
 
 <script>
+  function showAddCategoryForm() {
+      $('.add-category-form-container').show()
+      $('#input-categories').removeAttr('disabled')
+      $('input[name="modules[]"]').removeAttr('disabled')
+      $('input[name="category_item_id"]').removeAttr('disabled')
+  }
   $('#form-module').delegate('.add-category-form-show-btn', 'click', function () {
-    $('.add-category-form-container').show()
-    $('#input-categories').removeAttr('disabled')
-    $('input[name="modules[]"]').attr('disabled', 'disabled')
+      showAddCategoryForm()
+      $('input[name="category_item_id"]').val('')
   })
 
   $('#form-module').delegate('.add-category-form-hide-btn', 'click', function () {
     $('.add-category-form-container').hide()
     $('#input-categories').attr('disabled', 'disabled')
     $('input[name="modules[]"]').attr('disabled', 'disabled')
+    $('input[name="category_item_id"]').attr('disabled', 'disabled')
   })
 
   $('.bd-example-modal-sm').delegate('.add-module-btn', 'click', function () {
@@ -284,6 +291,45 @@
 
   $('#form-module').delegate('.add-category-form-module-remove-btn', 'click', function () {
     $(this).parent().remove()
+  })
+
+  $('#form-module').delegate('.category-item-remove-btn', 'click', function () {
+    // $(this).parents('category-form-list-modules-item').remove()
+      let categoryItemId = $(this).attr('data-category-item-id')
+      let categoryItem =   $(this).parents('.category-form-list-modules-item')
+
+      $.ajax({
+          type: "POST",
+          url: 'index.php?route=extension/module/mega_menu_nik/removeCategoryItem&categoryItemId=' + categoryItemId + '&user_token={{ user_token }}',
+          success: function() {
+            $(categoryItem).remove()
+          }
+      });
+  })
+
+  $('#form-module').delegate('.category-item-edit-btn', 'click', function () {
+      // $(this).parents('category-form-list-modules-item').remove()
+      let categoryItemId = $(this).attr('data-category-item-id')
+
+      $.ajax({
+          type: "POST",
+          url: 'index.php?route=extension/module/mega_menu_nik/getCategoryItem&categoryItemId=' + categoryItemId + '&user_token={{ user_token }}',
+          success: function(res) {
+              console.log(res)
+              $('#input-categories').val(res.category_id)
+              $('input[name="category_item_id"]').val(res.id)
+              $('.add-category-form-add-modules-inner').html('')
+              if (res.modules) {
+                  for (let i = 0; i < res.modules.length; i++) {
+                      if (res.modules[i]) {
+                          $('.add-category-form-add-modules-inner').append(addModuleHTML(res.modules[i].module_code, res.modules[i].module_name));
+                      }
+                  }
+              }
+
+              showAddCategoryForm()
+          }
+      });
   })
 </script>
 {{ footer }}
