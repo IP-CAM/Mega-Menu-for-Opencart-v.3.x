@@ -17,18 +17,22 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
 
             $post['module_mega_menu_nik_categories'] = isset($setting['module_mega_menu_nik_categories']) ? $setting['module_mega_menu_nik_categories'] : array();
 
+//            echo "<pre>";
+//            print_r($post);
+//            echo "</pre>";
+
             if (isset($post['category'])) {
-                if (isset($post['category_item_id'])) {
+                if (!empty($post['category_item_id'])) {
                     foreach ( $post['module_mega_menu_nik_categories'] as $k => $category) {
                         if ($category['id'] == $post['category_item_id']) {
                             $category['category'] = $post['category'];
-                            $category['modules']  = $post['modules'];
+                            $category['modules']  = isset($post['modules']) ? $post['modules'] : array();
 
                             $post['module_mega_menu_nik_categories'][$k] = $category;
                         }
                     }
                 } else {
-                    $id = !empty($post['module_mega_menu_nik_categories']) ? ((int)$post['module_mega_menu_nik_categories'][count($post['module_mega_menu_nik_categories']) - 1]['id'] + 1) : 0;
+                    $id = !empty($post['module_mega_menu_nik_categories']) ? ((int)$post['module_mega_menu_nik_categories'][count($post['module_mega_menu_nik_categories']) - 1]['id'] + 1) : 1;
 
                     $post['module_mega_menu_nik_categories'][] = array(
                         'id'       => $id,

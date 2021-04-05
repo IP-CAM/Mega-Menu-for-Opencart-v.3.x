@@ -2,20 +2,23 @@
   .mega-menu {
     background-color: #fff;
     width: fit-content;
-    height: 600px;
+    height: 550px;
     z-index: 999;
-    position: fixed;
-    top: 10%;
-    left: 10%;
+    position: absolute;
+    /*top: 10%;*/
+    /*left: 10%;*/
     box-shadow: 0px 8px 8px 0px rgba(34, 60, 80, 0.2);
     border-radius: 5px;
-    display: flex;
+    display: none;
     border: 1px solid #C8D7DE;
   }
   .mega-menu-inner {
     padding: 10px 0 25px;
     width: 250px;
     border-right: 1px solid #C8D7DE;
+    {% if module_mega_menu_nik_width %}
+      width: {{ module_mega_menu_nik_width }}{{ module_mega_menu_nik_width_type }}
+    {% endif %}
   }
   .mega-menu .border-right-none {
     border-right: none;
@@ -59,7 +62,7 @@
     left: 100%;
     top: -1px;
     background-color: #fff;
-    width: 500px;
+    /*width: 500px;*/
     height: 600px;
     box-shadow: 0px 8px 8px 0px rgba(34, 60, 80, 0.2);
     border-top-right-radius: 5px;
@@ -67,27 +70,90 @@
     border-bottom-left-radius: 0;
     border-top-left-radius: 0;
     border: 1px solid #C8D7DE;
+    cursor: default;
   }
   .mega-menu-childs-container .mega-menu-inner {
     display: flex;
     flex-direction: column;
+  }
+  .mega-menu-childs-container .mega-menu-inner .mega-menu-inner-childs-container {
+    padding: 15px 0;
+    width: 80%;
+    margin: 0 auto;
+    border-bottom: 1px solid #C8D7DE;
+  }
+  .mega-menu-childs-container .mega-menu-inner .mega-menu-inner-childs-container:last-child {
+    border-bottom: none;
+  }
+  .mega-menu-childs-container .mega-menu-inner .mega-menu-inner-childs-container .mega-menu-inner-childs-container-childs {
+    display: flex;
+    flex-direction: column;
+    margin-left: 15px;
+  }
+  .mega-menu-inner-childs-container-childs a {
+    font-weight: normal;
+    padding: 10px;
+    color: black;
+  }
+  .mega-menu-inner-childs-container-childs a:hover {
+    text-decoration: underline;
+    cursor: pointer;
+    color: black;
+  }
+  .mega-menu-inner-childs-container .mega-menu-second-level-link {
+    color: black;
   }
 </style>
 
 <div class="mega-menu">
   <div class="mega-menu-inner">
     {% for category in module_mega_menu_nik_categories %}
-      <a href="{{ module_mega_menu_nik_link_to_all_categories }}" class="mega-menu-inner-item">
+      <div class="mega-menu-inner-item">
         <span class="mega-menu-inner-item-name">{{ category.category.name }}</span>
-        <span class="mega-menu-inner-item-arrow">></span>
-        <div class="mega-menu-childs-container">
-          {% for keys, secondLvlChild in category.category.childs %}
-            <div class="mega-menu-inner">
-            {{ secondLvlChild.name }}
-            </div>
-          {% endfor %}
-        </div>
-      </a>
+        {% if category.category.childs or category.category.modules %}
+          <span class="mega-menu-inner-item-arrow"><i class="fa fa-chevron-right"></i></span>
+          <div class="mega-menu-childs-container">
+
+            {% set columnCounter = 0 %}
+            {% for secondLvlChild in category.category.childs %}
+              {% if columnCounter % 2 == 0 %}
+                <div class="mega-menu-inner">
+              {% endif %}
+
+              <div class="mega-menu-inner-childs-container">
+                <a class="mega-menu-second-level-link" href="{{ secondLvlChild.href }}">{{ secondLvlChild.name }}</a>
+                <div class="mega-menu-inner-childs-container-childs">
+                  {% for thirdLvlChild in secondLvlChild.childs %}
+                    <a href="{{ thirdLvlChild.href }}">{{ thirdLvlChild.name }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+
+              {% if columnCounter % 2 == 1 %}
+                </div>
+              {% endif %}
+
+              {% set columnCounter = columnCounter + 1 %}
+            {% endfor %}
+
+            {% if category.category.modules %}
+
+              {% if columnCounter % 2 == 0 %}
+                <div class="mega-menu-inner">
+                {% set columnCounter = columnCounter + 1 %}
+              {% endif %}
+
+
+              {% for module in category.category.modules %}
+                {{ module }}
+              {% endfor %}
+            {% endif %}
+
+            {% if columnCounter % 2 == 1 %}</div>{% endif %}
+
+          </div>
+        {% endif %}
+      </div>
     {% endfor %}
     {% if module_mega_menu_nik_link_to_all_categories %}
       <div class="mega-menu-inner-divider"></div>
@@ -97,3 +163,17 @@
     {% endif %}
   </div>
 </div>
+
+<script>
+
+  $('.{{ module_mega_menu_nik_class_button_for_call }}').on('click', function () {
+      let megaMenu = $('.mega-menu');
+      if (megaMenu.is(':visible')) {
+          megaMenu.hide()
+      } else {
+          megaMenu.css('display', 'flex')
+      }
+      $(this).after(megaMenu)
+  })
+
+</script>
