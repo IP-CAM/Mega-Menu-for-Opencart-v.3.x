@@ -9,8 +9,6 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
 
         $data = $this->model_setting_setting->getSetting('module_mega_menu_nik');
 
-//        echo "<pre>";
-//        var_dump($data);
         foreach ($data['module_mega_menu_nik_categories'] as $k => $category) {
 
             $category_info = $this->model_catalog_category->getCategory($category['category']);
@@ -56,9 +54,6 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
 
             $data['module_mega_menu_nik_categories'][$k]['category'] = $category_info;
         }
-//        var_dump($data['module_mega_menu_nik_categories']);
-//        echo "</pre>";
-
 
 		return $this->load->view('extension/module/mega_menu_nik', $data);
 	}

@@ -14,10 +14,11 @@
   }
   .mega-menu-inner {
     padding: 10px 0 25px;
-    width: 250px;
     border-right: 1px solid #C8D7DE;
     {% if module_mega_menu_nik_width %}
-      width: {{ module_mega_menu_nik_width }}{{ module_mega_menu_nik_width_type }}
+      width: {{ module_mega_menu_nik_width }}{{ module_mega_menu_nik_width_type }};
+    {% else %}
+      width: 250px;
     {% endif %}
   }
   .mega-menu .border-right-none {
@@ -166,14 +167,42 @@
 
 <script>
 
-  $('.{{ module_mega_menu_nik_class_button_for_call }}').on('click', function () {
-      let megaMenu = $('.mega-menu');
-      if (megaMenu.is(':visible')) {
-          megaMenu.hide()
-      } else {
-          megaMenu.css('display', 'flex')
-      }
-      $(this).after(megaMenu)
-  })
+    {% if module_mega_menu_nik_call_type %}
+
+      $('.{{ module_mega_menu_nik_class_button_for_call }}').on('click', function () {
+          let megaMenu = $('.mega-menu');
+          if (megaMenu.is(':visible')) {
+              megaMenu.hide()
+          } else {
+              megaMenu.css('display', 'flex')
+          }
+          $(this).append(megaMenu)
+      })
+
+    {% else %}
+
+      $('.{{ module_mega_menu_nik_class_button_for_call }}').on('mouseenter', function () {
+          let megaMenu = $('.mega-menu');
+          if (megaMenu.is(':visible')) {
+              megaMenu.hide()
+          } else {
+              megaMenu.css('display', 'flex')
+          }
+          $(this).append(megaMenu)
+      })
+
+      $('.{{ module_mega_menu_nik_class_button_for_call }}').on('mouseleave', function () {
+          let megaMenu = $('.mega-menu');
+          if (megaMenu.is(':visible')) {
+              megaMenu.hide()
+          } else {
+              megaMenu.css('display', 'flex')
+          }
+          $(this).append(megaMenu)
+      })
+
+    {% endif %}
+
+
 
 </script>
