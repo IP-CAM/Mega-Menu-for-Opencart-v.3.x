@@ -167,41 +167,46 @@
 
 <script>
 
-    {% if module_mega_menu_nik_call_type %}
+    $(document).ready(function () {
 
-      $('.{{ module_mega_menu_nik_class_button_for_call }}').on('click', function () {
-          let megaMenu = $('.mega-menu');
-          if (megaMenu.is(':visible')) {
-              megaMenu.hide()
-          } else {
-              megaMenu.css('display', 'flex')
-          }
-          $(this).append(megaMenu)
-      })
+      {% if module_mega_menu_nik_call_type %}
 
-    {% else %}
+        $('.{{ module_mega_menu_nik_class_button_for_call }}').on('click', function () {
+            console.log(123)
+            let megaMenu = $('.mega-menu');
+            if (megaMenu.is(':visible')) {
+                megaMenu.hide()
+            } else {
+                megaMenu.css('display', 'flex')
+            }
+            $(this).append(megaMenu)
+        })
 
-      $('.{{ module_mega_menu_nik_class_button_for_call }}').on('mouseenter', function () {
-          let megaMenu = $('.mega-menu');
-          if (megaMenu.is(':visible')) {
-              megaMenu.hide()
-          } else {
-              megaMenu.css('display', 'flex')
-          }
-          $(this).append(megaMenu)
-      })
+      {% else %}
 
-      $('.{{ module_mega_menu_nik_class_button_for_call }}').on('mouseleave', function () {
-          let megaMenu = $('.mega-menu');
-          if (megaMenu.is(':visible')) {
-              megaMenu.hide()
-          } else {
-              megaMenu.css('display', 'flex')
-          }
-          $(this).append(megaMenu)
-      })
+        $('.{{ module_mega_menu_nik_class_button_for_call }}').on('mouseenter', function () {
+            let megaMenu = $('.mega-menu');
+            if (megaMenu.is(':visible')) {
+                megaMenu.hide()
+            } else {
+                megaMenu.css('display', 'flex')
+            }
+            $(this).append(megaMenu)
+        })
 
-    {% endif %}
+        $('.{{ module_mega_menu_nik_class_button_for_call }}').on('mouseleave', function () {
+            let megaMenu = $('.mega-menu');
+            if (megaMenu.is(':visible')) {
+                megaMenu.hide()
+            } else {
+                megaMenu.css('display', 'flex')
+            }
+            $(this).append(megaMenu)
+        })
+
+      {% endif %}
+
+    })
 
 
 
