@@ -17,10 +17,6 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
 
             $post['module_mega_menu_nik_categories'] = isset($setting['module_mega_menu_nik_categories']) ? $setting['module_mega_menu_nik_categories'] : array();
 
-//            echo "<pre>";
-//            print_r($post);
-//            echo "</pre>";
-
             if (isset($post['category'])) {
                 if (!empty($post['category_item_id'])) {
                     foreach ( $post['module_mega_menu_nik_categories'] as $k => $category) {
@@ -40,6 +36,13 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
                         'modules'  => isset($post['modules']) ? $post['modules'] : array()
                     );
                 }
+
+
+                $this->model_setting_setting->editSetting('module_mega_menu_nik', $post);
+
+                $this->session->data['success'] = $this->language->get('text_success');
+
+                $this->response->redirect($this->url->link('extension/module/mega_menu_nik', 'user_token=' . $this->session->data['user_token'], true));
             }
 
 			$this->model_setting_setting->editSetting('module_mega_menu_nik', $post);

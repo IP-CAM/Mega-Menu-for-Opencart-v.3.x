@@ -116,12 +116,12 @@
             </div>
             <div class="col-sm-5">
               <select name="module_mega_menu_nik_width_type" id="input-width-type" class="form-control">
-                {% if module_mega_menu_nik_call_type == 'px' %}
+                {% if module_mega_menu_nik_width_type == 'px' %}
                   <option value="px" selected="selected">{{ text_pixel }}</option>
-                  <option value="%">{{ text_percent }}</option>
+                  <option value="vw">{{ text_percent }}</option>
                 {% else %}
                   <option value="px">{{ text_pixel }}</option>
-                  <option value="%" selected="selected">{{ text_percent }}</option>
+                  <option value="vw" selected="selected">{{ text_percent }}</option>
                 {% endif %}
               </select>
             </div>
