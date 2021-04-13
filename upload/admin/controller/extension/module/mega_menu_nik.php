@@ -111,6 +111,18 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
             $data['module_mega_menu_nik_link_to_all_categories'] = $this->config->get('module_mega_menu_nik_link_to_all_categories');
         }
 
+        if (isset($this->request->post['module_mega_menu_nik_link_to_all_brands'])) {
+            $data['module_mega_menu_nik_link_to_all_brands'] = $this->request->post['module_mega_menu_nik_link_to_all_brands'];
+        } else {
+            $data['module_mega_menu_nik_link_to_all_brands'] = $this->config->get('module_mega_menu_nik_link_to_all_brands');
+        }
+
+        if (isset($this->request->post['module_mega_menu_nik_link_to_all_products'])) {
+            $data['module_mega_menu_nik_link_to_all_products'] = $this->request->post['module_mega_menu_nik_link_to_all_products'];
+        } else {
+            $data['module_mega_menu_nik_link_to_all_products'] = $this->config->get('module_mega_menu_nik_link_to_all_products');
+        }
+
         if (isset($this->request->post['module_mega_menu_nik_categories'])) {
             $data['module_mega_menu_nik_categories'] = $this->request->post['module_mega_menu_nik_categories'];
         } else {

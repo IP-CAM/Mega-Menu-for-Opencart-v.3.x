@@ -1,3 +1,5 @@
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   .mega-menu {
     background-color: #fff;
@@ -11,6 +13,7 @@
     border-radius: 5px;
     display: none;
     border: 1px solid #C8D7DE;
+    font-family: 'Open Sans', sans-serif;
   }
   .mega-menu-inner {
     padding: 10px 0 25px;
@@ -29,9 +32,16 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     font-weight: bold;
     font-size: 14px;
-    color: black;
+    color: #505A5F;
+  }
+  .mega-menu-inner-item-all {
+    padding: 12px 25px;
+  }
+  .mega-menu-inner-item-all .mega-menu-inner-item-name {
+    font-size: 14px;
   }
   .mega-menu-inner-divider {
     border-top: 1px solid #C8D7DE;
@@ -39,11 +49,13 @@
     margin: 0 auto;
   }
   .mega-menu-inner-item:hover, .mega-menu-inner-item-all:hover {
-    background-color: #F8F4F3;
+    background-color: #F0F7FD;
     color: black;
   }
   .mega-menu-inner-item-name {
     color: black;
+    font-size: 15px;
+    font-weight: normal;
   }
   .mega-menu-inner-item:hover .mega-menu-inner-item-name {
     color: black;
@@ -57,6 +69,9 @@
     border-bottom-left-radius: 5px;
     border-top-left-radius: 5px
   }
+  .mega-menu-inner-item-arrow {
+    font-weight: normal;
+  }
   .mega-menu-childs-container {
     display: none;
     position: absolute;
@@ -64,7 +79,7 @@
     top: -1px;
     background-color: #fff;
     /*width: 500px;*/
-    height: 600px;
+    min-height: 550px;
     box-shadow: 0px 8px 8px 0px rgba(34, 60, 80, 0.2);
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px;
@@ -77,11 +92,8 @@
     display: flex;
     flex-direction: column;
   }
-  .mega-menu-childs-container .mega-menu-inner .mega-menu-inner-childs-container {
-    padding: 15px 0;
-    width: 80%;
-    margin: 0 auto;
-    border-bottom: 1px solid #C8D7DE;
+  .mega-menu-childs-container .mega-menu-inner .mega-menu-inner-childs-container:hover {
+    background-color: #F0F7FD;
   }
   .mega-menu-childs-container .mega-menu-inner .mega-menu-inner-childs-container:last-child {
     border-bottom: none;
@@ -102,7 +114,26 @@
     color: black;
   }
   .mega-menu-inner-childs-container .mega-menu-second-level-link {
-    color: black;
+    color: #505A5F;
+    padding: 12px 25px;
+    display: flex;
+    font-weight: normal;
+    font-size: 14px;
+  }
+  .mega-menu-inner-item-arrow {
+    height: 8px;
+    width: 8px;
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    transform: rotate(45deg);
+  }
+  .mega-menu-inner-img-container {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+  }
+  .mega-menu-inner-img-container img {
+    width: 150px;
   }
 </style>
 
@@ -112,55 +143,55 @@
       <div class="mega-menu-inner-item">
         <span class="mega-menu-inner-item-name">{{ category.category.name }}</span>
         {% if category.category.childs or category.category.modules %}
-          <span class="mega-menu-inner-item-arrow"><i class="fa fa-chevron-right"></i></span>
+          <span class="mega-menu-inner-item-arrow"></span>
           <div class="mega-menu-childs-container">
 
-            {% set columnCounter = 0 %}
-            {% for secondLvlChild in category.category.childs %}
-              {% if columnCounter % 2 == 0 %}
-                <div class="mega-menu-inner">
-              {% endif %}
+            <div class="mega-menu-inner">
+              <div class="mega-menu-inner-childs">
+                {% for secondLvlChild in category.category.childs %}
 
-              <div class="mega-menu-inner-childs-container">
-                <a class="mega-menu-second-level-link" href="{{ secondLvlChild.href }}">{{ secondLvlChild.name }}</a>
-                <div class="mega-menu-inner-childs-container-childs">
-                  {% for thirdLvlChild in secondLvlChild.childs %}
-                    <a href="{{ thirdLvlChild.href }}">{{ thirdLvlChild.name }}</a>
-                  {% endfor %}
-                </div>
+                  <div class="mega-menu-inner-childs-container">
+                    <a class="mega-menu-second-level-link" href="{{ secondLvlChild.href }}">{{ secondLvlChild.name }}</a>
+                  </div>
+
+                {% endfor %}
               </div>
 
-              {% if columnCounter % 2 == 1 %}
-                </div>
+
+              {% if category.category.modules %}
+                {% for module in category.category.modules %}
+                  {{ module }}
+                {% endfor %}
               {% endif %}
 
-              {% set columnCounter = columnCounter + 1 %}
-            {% endfor %}
-
-            {% if category.category.modules %}
-
-              {% if columnCounter % 2 == 0 %}
-                <div class="mega-menu-inner">
-                {% set columnCounter = columnCounter + 1 %}
+              {% if category.category.thumb %}
+                 <div class="mega-menu-inner-img-container">
+                   <img src="{{ category.category.thumb }}" alt="">
+                 </div>
               {% endif %}
-
-
-              {% for module in category.category.modules %}
-                {{ module }}
-              {% endfor %}
-            {% endif %}
-
-            {% if columnCounter % 2 == 1 %}</div>{% endif %}
-
+            </div>
+               
           </div>
         {% endif %}
       </div>
     {% endfor %}
-    {% if module_mega_menu_nik_link_to_all_categories %}
+    {% if module_mega_menu_nik_link_to_all_categories or module_mega_menu_nik_link_to_all_brands or module_mega_menu_nik_link_to_all_products %}
       <div class="mega-menu-inner-divider"></div>
-      <a href="{{ module_mega_menu_nik_link_to_all_categories }}" class="mega-menu-inner-item-all">
-        <span class="mega-menu-inner-item-name">{{ text_all_categories }}</span>
-      </a>
+      {% if module_mega_menu_nik_link_to_all_categories %}
+        <a href="{{ module_mega_menu_nik_link_to_all_categories }}" class="mega-menu-inner-item-all">
+          <span class="mega-menu-inner-item-name">{{ text_all_categories }}</span>
+        </a>
+      {% endif %}
+      {% if module_mega_menu_nik_link_to_all_brands %}
+        <a href="{{ module_mega_menu_nik_link_to_all_brands }}" class="mega-menu-inner-item-all">
+          <span class="mega-menu-inner-item-name">{{ text_all_brands }}</span>
+        </a>
+      {% endif %}
+      {% if module_mega_menu_nik_link_to_all_products %}
+        <a href="{{ module_mega_menu_nik_link_to_all_products }}" class="mega-menu-inner-item-all">
+          <span class="mega-menu-inner-item-name">{{ text_all_products }}</span>
+        </a>
+      {% endif %}
     {% endif %}
   </div>
 </div>

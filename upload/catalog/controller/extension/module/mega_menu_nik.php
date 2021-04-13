@@ -6,21 +6,19 @@ class ControllerExtensionModuleMegaMenuNik extends Controller {
         $this->load->model('setting/setting');
         $this->load->model('extension/module/mega_menu_nik');
         $this->load->model('catalog/category');
+        $this->load->model('tool/image');
 
         $data = $this->model_setting_setting->getSetting('module_mega_menu_nik');
 
         foreach ($data['module_mega_menu_nik_categories'] as $k => $category) {
 
             $category_info = $this->model_catalog_category->getCategory($category['category']);
+            $category_info['thumb'] = $this->model_tool_image->resize($category_info['image'], 250, 250);
             $category_info['childs'] = $this->model_extension_module_mega_menu_nik->getCategoryChilds($category_info['category_id']);
+//            var_dump($category_info);
             foreach ($category_info['childs'] as $kk => $child) {
-                $category_child_info = $this->model_extension_module_mega_menu_nik->getCategoryChilds($child['category_id']);
-                foreach ($category_child_info as $kkk => $category_child_child) {
-                    $category_child_info[$kkk]['href'] = $this->url->link('product/category', 'path=' . $category_child_child['category_id']);
-                }
                 $child['href'] = $this->url->link('product/category', 'path=' . $child['category_id']);
                 $category_info['childs'][$kk] = $child;
-                $category_info['childs'][$kk]['childs'] = $category_child_info;
             }
 
             if (!empty($category['modules'])) {
